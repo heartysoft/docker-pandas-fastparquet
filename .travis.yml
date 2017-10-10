@@ -1,0 +1,22 @@
+sudo: required
+services:
+- docker
+script:
+- export REPO=heartysoft/docker-pandas-fastparquet
+- docker build -t $REPO:0.1.3 --build-arg FP_VERSION=0.1.3 - < Dockerfile
+deploy:
+  provider: script
+  on:
+    tags: true
+  script:
+    -   >
+        docker tag $REPO:0.1.3 $REPO:0.1.3-$TRAVIS_TAG && 
+        docker tag $REPO:0.1.3 $REPO:latest && 
+        docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USER" -p="$DOCKER_PASS" && 
+        docker push $REPO && 
+        echo push complete
+env:
+  global:
+  - secure: FHYwuY/LExsVE8d0aemBRxxZuaKCkD8aBTPIsj9CNFoGWF/rsEE+T7CyHZv0ARBY8OLHwdHNCaiODIc9b/0JFGpAmC3YUdLCLldUFt2mDV428hkWpMmMwWirp+hmggcfHjPBBPyuF4GfnI/hU+Px7GTKE504AfSNcEeYNrsCEBAAgUMW83ewNDlZUgeNAGTJGAwwDNjhv7p9fP2gG4XIZob3Eh9DkHOG6DUm+IUl5LOQdQtN1e0/2e0Iz2ROZxItsgrfgSlxeY7PGTE8nkbySAtgHImJcqFRUPY1FKk+n9oXh0AW4iQerrgcD08zrjRua4ZdlvW0dN9IukW3r4Mg0NaTM3piPP1/GRzo8UU2PNmF0AtOBgjL5gaAu1RWfT9tb3+rHQPxO2UrGvcLMv44ip2BpnIILhBBC/Hhkgv58n9cDwasuvk/fJIWa5UdwPwgkaBT4pMO7G7YkH9h9KptdKC1ZENSm9/wDRVc56CtSC0lxr3YVn3ok8G1x6p+CXvRmluXyMM5AgjXbOXbO3c60IAsl7PcglM7DvfJvCxiO6zUJnj91RENr6eLi8NSpOWC5g/nh2L3EnhDqNOuKaJYt77KG4B1NvAFj+bN1QkBZVagMPZ3+SiKstpYrmO+Cd5VwJvuD7l25ntVb564WKrouJKwhZ/VPUPUmvGJAxtREV8=
+  - secure: DdNahdvCVISZQSQjuU9KkQIGpeTWfUMmQ3J/TnM/OMbsqxNz6MTrSXR0FPtQlIyFqwrr97DottHNvXeA8aHT8HyON2hufduaETwJlUwVZd0IBMgzu/Bo7Do1679VWi/rr7R1d/2FtA8rzmfu+TtXwceSSTfrJzgnLLAzBEqe039TM8G+RW7swEzN2G98LUP2d8BIRIV4FmG3tnsRENEquwvE9PyPr/IStAxzaFvWEZWG4Ku7NuzHWqc1K1vdOLe9N09K2gNgz3XMAZJMRlyKa9fq211QFxN8/7Tu/ajV6JIrXpCvsMizoDGiAwF0Ils13PYu1OapdgknEsLC9cUmbyCE3vsdBH4y8OWu3AY2Kl/QRU1c11eG891Cj6N7i/CUk1Q+kWP5TGDEnNXLX9XGJphsD6dnjDJ9oDCN4Br8y9MEDHUzcqe7aH0m2o7wQKOB6n2h5hIWmTNqwCe5j8y1ZG1t4tDfoMZuA/4h5FOz9azqH4vCDmHs+DmUmhbH5gBxlwFQOCNn481UOp0WXDL4QeMPC2diEfYmrB5ZenVh2tt9TB5NxApj2SX1QMMsFPYcmsn5RHluyWZz9L6yZHlLUleuoLc/eSJK4srIXCTbCwakIqEi6yubRNxX4+3eGuCMTaqX1cVB5MxWuba+UlDVP5BjXvgTCrK96IXZ16HSBBc=
+  - secure: e8FxwiBo44hOOQLp2rPM1ImhEzaLBaLkXw9gZWG16l5iiOjFTB1muNzQR1iVgV3hoD/M/O/s2V47GQwErykAvEC5UUBUc+aoz55qfd2XFWgwqOkyM2pxzEf/hp2BhztX9DE+k6lV+rvnKLf7f4ROd+m0CObhA8T86BFxFkzmGRHJj8epJgiESQY7rEENvjs7Vov9ugIvN+54P1q9dryV5DAFau2bmZtnNo4d98o7OgEWbhyyR7XKfrLQanZN6HTuExN3Ox8MDF9KA17oBQ5c1All5s0YVVpIS3VO6wkha0TQ69LGdkMQeYwhy1LtwEYBJFJpzraHBO8+yNYNeagfZIn9g8WCi5mGvtSsq1XqUQkQWFE2alCH5oJw77FpFpf1qlIdMunqKbUlVjdBvm0U7VzXG8UzuHov9HnRXUsleCqWGd4JFu/NEtulbz7MPCEomFhezOeka+YlrVV8oDIHqP7MjzMOBP4uxbnqBYnz23k8CXg/P4A0x6s9vleCF225kVEeLe8NZNo58b/PAHPLoJnzSAAf9rPh8ql8oZkVMoV1L4w+wcDdTNYkg2FJiAdblSIfdOP35iifqS4PHXJRaS1KvqJafV0ubqqFT0C996V1+4L/fwSAW2dCFp3mdM98I4Dv+EUsH9yYXzN30WJr6WaGDGoNfGGhBlTINgfehOA=
