@@ -3,7 +3,7 @@ services:
 - docker
 script:
 - export REPO=heartysoft/docker-pandas-fastparquet
-- docker build -t $REPO:0.1.3 --build-arg FP_VERSION=0.1.3 - < Dockerfile
+- docker build -t $REPO:0.1.3 --build-arg FP_VERSION=0.1.3 --build-arg PANDAS_VERSION=0.21.0 - < Dockerfile
 deploy:
   provider: script
   on:
